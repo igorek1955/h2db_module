@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * implementation of IDataFileStorage for persisting ExchangeOrder's to h2 database for backup.
- * Uses Spring Data Jpa for database persistance
+ * Uses Spring Data Jpa for database persistence
  */
 @Slf4j
 @Service

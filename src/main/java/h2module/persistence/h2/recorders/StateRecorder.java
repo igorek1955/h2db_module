@@ -53,8 +53,6 @@ public class StateRecorder {
             } catch (Exception e) {
                 log.warn(e.getMessage());
             }
-        } else {
-//            System.err.println("finished writing to db in " + ((System.currentTimeMillis() - start) / 1000) + " secs");
         }
     }
 
@@ -72,8 +70,6 @@ public class StateRecorder {
      * @param order
      */
     public void commitChange(ExchangeOrder order) {
-//        log.warn("committing to db order : " + order.getInternalOrderId() + " with status " + order.getStatus());
-        log.warn("committing to db order: " + order.toString());
         updatedOrders.addLast(objectConverter.convertToLocalEntity(order, order.getInternalOrderId()));
     }
 

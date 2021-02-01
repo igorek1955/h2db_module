@@ -48,12 +48,12 @@ public class RepositoryTestingService {
 
     private void testEverything() {
         try {
-//            if (!testh2Save(10)) System.err.println("testh2Save has failed");
-//            if (!testH2LoadAll()) System.err.println("testH2LoadAll has failed");
-//            if (!testPsqlSave()) System.err.println("postgresql save has failed");
-//            if (!testPsqlLoadAll()) System.err.println("postgresql load all has failed");
-//            if(!TestPsqlDeleteAll()) System.err.println("postgresql delete all has failed");
-//            if(!testH2DeleteAll()) System.err.println("h2 delete all has failed");
+            if (!testh2Save(10)) System.err.println("testh2Save has failed");
+            if (!testH2LoadAll()) System.err.println("testH2LoadAll has failed");
+            if (!testPsqlSave()) System.err.println("postgresql save has failed");
+            if (!testPsqlLoadAll()) System.err.println("postgresql load all has failed");
+            if(!TestPsqlDeleteAll()) System.err.println("postgresql delete all has failed");
+            if(!testH2DeleteAll()) System.err.println("h2 delete all has failed");
         } catch (Exception e){
             log.error(e.getMessage());
         }

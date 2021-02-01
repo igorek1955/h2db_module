@@ -4,10 +4,8 @@ import h2module.persistence.h2.converter.ObjectConverter;
 import h2module.persistence.h2.file_storage.DataFileStorage;
 import h2module.persistence.h2.model.LocalStorageEntity;
 import h2module.persistence.postgres.model.ExchangeOrder;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
