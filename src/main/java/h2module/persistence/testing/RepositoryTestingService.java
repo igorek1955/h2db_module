@@ -1,7 +1,7 @@
 package h2module.persistence.testing;
 
 
-import h2module.persistence.h2.converter.ExchangeOrderConverter;
+import h2module.persistence.h2.converter.ObjectConverter;
 import h2module.persistence.h2.file_storage.DataFileStorage;
 import h2module.persistence.h2.model.LocalStorageEntity;
 import h2module.persistence.postgres.model.ExchangeOrder;
@@ -37,6 +37,9 @@ public class RepositoryTestingService {
     @Autowired
     OrderProducer orderProducer;
 
+    @Autowired
+    ObjectConverter objectConverter;
+
 
     @PostConstruct
     private void initTest(){
@@ -45,10 +48,10 @@ public class RepositoryTestingService {
 
     private void testEverything() {
         try {
-            if (!testh2Save(10)) System.err.println("testh2Save has failed");
-            if (!testH2LoadAll()) System.err.println("testH2LoadAll has failed");
-            if (!testPsqlSave()) System.err.println("postgresql save has failed");
-            if (!testPsqlLoadAll()) System.err.println("postgresql load all has failed");
+//            if (!testh2Save(10)) System.err.println("testh2Save has failed");
+//            if (!testH2LoadAll()) System.err.println("testH2LoadAll has failed");
+//            if (!testPsqlSave()) System.err.println("postgresql save has failed");
+//            if (!testPsqlLoadAll()) System.err.println("postgresql load all has failed");
 //            if(!TestPsqlDeleteAll()) System.err.println("postgresql delete all has failed");
 //            if(!testH2DeleteAll()) System.err.println("h2 delete all has failed");
         } catch (Exception e){
@@ -61,7 +64,8 @@ public class RepositoryTestingService {
         try {
             List<LocalStorageEntity> orderList = new ArrayList<>(i);
             for (int j = 0; j < i; j++) {
-                orderList.add(ExchangeOrderConverter.convertToLocalEntity(orderProducer.getLimitBitOrderWithAllFieldsForTesting()));
+                ExchangeOrder order = orderProducer.getLimitBitOrderWithAllFieldsForTesting();
+                orderList.add(objectConverter.convertToLocalEntity(order, order.getInternalOrderId()));
             }
             orderList.forEach(order -> h2dataStorage.save(order));
             log.warn("all orders have been pushed to h2 database");
@@ -91,7 +95,8 @@ public class RepositoryTestingService {
         try{
             postgresStorage.deleteAll();
             ordersFromH2Db.forEach((key, value) -> {
-                postgresStorage.save(ExchangeOrderConverter.convertFromLocalEntity(value));
+                ExchangeOrder order = (ExchangeOrder) objectConverter.convertFromLocalEntity(value);
+                postgresStorage.save(order);
             });
             Thread.sleep(200);
         } catch (Exception e){

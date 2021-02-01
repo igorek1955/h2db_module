@@ -1,9 +1,10 @@
 package h2module.persistence.h2.recorders;
 
-import h2module.persistence.h2.converter.ExchangeOrderConverter;
+import h2module.persistence.h2.converter.ObjectConverter;
 import h2module.persistence.h2.file_storage.DataFileStorage;
 import h2module.persistence.h2.model.LocalStorageEntity;
 import h2module.persistence.postgres.model.ExchangeOrder;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +32,13 @@ public class StateRestorer {
     @Autowired
     DataFileStorage dataStorage;
 
+    @Autowired
+    ObjectConverter objectConverter;
+
+
     private Map<String, ExchangeOrder> ordersFromDb = new HashMap<>();
     private List<ExchangeOrder> ordersFromServer = new ArrayList<>();
+
 
     @PostConstruct
     private void initRestoration() {
@@ -47,8 +53,9 @@ public class StateRestorer {
      */
     private void initOrderMapAllOrders() {
         Map<String, LocalStorageEntity> tempOrders = dataStorage.loadAll();
-        tempOrders.forEach((k, v) -> ordersFromDb.put(k, ExchangeOrderConverter.convertFromLocalEntity(v)));
+        tempOrders.forEach((k, v) -> ordersFromDb.put(k, (ExchangeOrder) objectConverter.convertFromLocalEntity(v)));
         System.err.println(ordersFromDb.size());
+        ordersFromDb.forEach((k, v) -> System.out.println(v));
     }
 
     /**

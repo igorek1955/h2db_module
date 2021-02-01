@@ -1,6 +1,6 @@
 package h2module.persistence.h2.recorders;
 
-import h2module.persistence.h2.converter.ExchangeOrderConverter;
+import h2module.persistence.h2.converter.ObjectConverter;
 import h2module.persistence.h2.file_storage.DataFileStorage;
 import h2module.persistence.h2.model.LocalStorageEntity;
 import h2module.persistence.postgres.model.ExchangeOrder;
@@ -30,6 +30,9 @@ public class StateRecorder {
 
     @Autowired
     DataFileStorage fileStorage;
+
+    @Autowired
+    ObjectConverter objectConverter;
 
     /**
      * saving updated orders to h2 database every 10 millis , initial delay - delay operations from first startup
@@ -68,10 +71,10 @@ public class StateRecorder {
      *
      * @param order
      */
-    public static void commitChange(ExchangeOrder order) {
+    public void commitChange(ExchangeOrder order) {
 //        log.warn("committing to db order : " + order.getInternalOrderId() + " with status " + order.getStatus());
         log.warn("committing to db order: " + order.toString());
-        updatedOrders.addLast(ExchangeOrderConverter.convertToLocalEntity(order));
+        updatedOrders.addLast(objectConverter.convertToLocalEntity(order, order.getInternalOrderId()));
     }
 
 

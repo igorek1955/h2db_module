@@ -20,8 +20,8 @@ import javax.persistence.Table;
 public class LocalStorageEntity {
 
     @Id
-    @Column(name="internal_order_id")
-    private String internalOrderId; //Our own id
+    @Column(name="id")
+    private String id; //Our own id
 
     @Column(name = "object")
     private byte[] object;

@@ -57,7 +57,7 @@ public class DataFileStorage implements IDataFileStorage<LocalStorageEntity> {
         try {
             localStorageEntityRepository.findAll().forEach(order -> {
                 log.info(order.toString());
-                orderMap.put(order.getInternalOrderId(), order);
+                orderMap.put(order.getId(), order);
             });
             log.info("successfully imported orders from in-memory database");
             log.info("openOrdersMap.size = " + orderMap.size());
