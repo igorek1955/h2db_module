@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 /**
- * Produces ExchangeOrder for testing
+ * Produces ExchangeOrders for testing
  *
  * Created by igor on 01 Feb, 2021
  */

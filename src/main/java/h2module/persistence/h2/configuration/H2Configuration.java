@@ -2,6 +2,7 @@ package h2module.persistence.h2.configuration;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -24,6 +26,7 @@ import java.util.Map;
  *
  */
 @Configuration
+@EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "h2module.persistence.h2.repository",
         entityManagerFactoryRef = "h2EntityManagerFactory",
@@ -36,6 +39,7 @@ public class H2Configuration {
         DataSourceProperties properties = new DataSourceProperties();
         properties.setUrl("jdbc:h2:file:./persistent_h2/h2");
         properties.setDriverClassName("org.h2.Driver");
+
         return properties;
     }
 

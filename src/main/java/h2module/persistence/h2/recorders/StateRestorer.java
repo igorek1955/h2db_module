@@ -38,7 +38,7 @@ public class StateRestorer {
     private List<ExchangeOrder> ordersFromServer = new ArrayList<>();
 
 
-    @PostConstruct
+//    @PostConstruct
     private void initRestoration() {
         initOrderMapAllOrders();
         getOpenOrdersFromServer();

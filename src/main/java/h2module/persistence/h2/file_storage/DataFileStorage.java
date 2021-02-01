@@ -4,6 +4,8 @@ import h2module.persistence.h2.model.LocalStorageEntity;
 import h2module.persistence.h2.repository.LocalStorageEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +16,7 @@ import java.util.Map;
  */
 @Slf4j
 @Service
+@Transactional
 public class DataFileStorage implements IDataFileStorage<LocalStorageEntity> {
 
     LocalStorageEntityRepository localStorageEntityRepository;
@@ -23,6 +26,7 @@ public class DataFileStorage implements IDataFileStorage<LocalStorageEntity> {
     }
 
     @Override
+    @Transactional
     public boolean save(LocalStorageEntity order) {
         try {
             localStorageEntityRepository.save(order);

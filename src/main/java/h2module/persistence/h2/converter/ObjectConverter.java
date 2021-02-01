@@ -34,21 +34,23 @@ public class ObjectConverter {
      */
     public LocalStorageEntity convertToLocalEntity(Object object, String id){
         LocalStorageEntity entity = new LocalStorageEntity();
+
         if(!registered){
-            log.error(clazz.toString());
             msgPack.register(clazz);
             registered = true;
         }
 
         try{
-            entity.setId(id);
             entity.setObject(msgPack.write(object));
+            entity.setId(id);
         } catch (Exception e){
             log.error("error occurred when converting to local entity " + e.getMessage());
         }
 
         return entity;
     }
+
+
 
     public Object convertFromLocalEntity(LocalStorageEntity entity){
 

@@ -74,6 +74,9 @@ public class StateRecorder {
     }
 
 
+    /**
+     * before exit writes remaining ExchangeOrder updates to database
+     */
     @PreDestroy
     private void pushToDbOnExit() {
         pushAllToDb();
