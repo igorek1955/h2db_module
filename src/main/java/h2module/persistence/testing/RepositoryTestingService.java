@@ -42,58 +42,32 @@ public class RepositoryTestingService {
     @PostConstruct
     private void initTest() {
 //        testEverything();
-//        initHeavyDBTest(10000, 10);
-        testDb(30000);
-    }
-
-    private void testDb(int orders) {
-        h2dataStorage.deleteAll();
-        Set<LocalStorageEntity> orderSet = new HashSet<>(orders);
-        for (int i = 0; i < orders; i++) {
-            ExchangeOrder order = orderProducer.getLimitBitOrderWithAllFieldsForTesting();
-            LocalStorageEntity entity = objectConverter.convertToLocalEntity(order, order.getInternalOrderId());
-            if(entity.getId() == null) System.out.println("null");
-            orderSet.add(entity);
-        }
-        ExchangeOrder orderSaved = (ExchangeOrder)  objectConverter.convertFromLocalEntity(orderSet.stream().findFirst().get());
-        System.err.println("saved order : " + orderSaved);
-        orderSet.forEach(order -> {
-            if (!h2dataStorage.save(order)) {
-                ExchangeOrder order1 = (ExchangeOrder) objectConverter.convertFromLocalEntity(order);
-                log.error("order not saved: " + order1.toString());
-            }
-        });
-        orderSet.forEach(order -> {
-            if (!h2dataStorage.delete(order.getId())) {
-                ExchangeOrder order1 = (ExchangeOrder) objectConverter.convertFromLocalEntity(order);
-                log.error("order not deleted: " + order1.toString());
-            }
-        });
+        initHeavyDBTest(100000, 10);
     }
 
     @SneakyThrows
     private void initHeavyDBTest(int orders, int loops) {
         h2dataStorage.deleteAll();
         for (int i = 0; i < loops; i++) {
-            Set<LocalStorageEntity> orderSet = new HashSet<>(orders);
-            for (int y = 0; y < orders; y++) {
+            Map<String, LocalStorageEntity> orderMap = new HashMap<>(orders);
+            while (orderMap.size() < orders) {
                 ExchangeOrder order = orderProducer.getLimitBitOrderWithAllFieldsForTesting();
-                orderSet.add(objectConverter.convertToLocalEntity(order, order.getInternalOrderId()));
+                orderMap.put(order.getInternalOrderId(), objectConverter.convertToLocalEntity(order, order.getInternalOrderId()));
             }
-            System.err.println("number of items in set to save : " + orderSet.size());
+            System.err.println("number of items in set to save : " + orderMap.size());
             long start = System.currentTimeMillis();
-            orderSet.forEach(order -> h2dataStorage.save(order));
+            orderMap.forEach((k,v) -> h2dataStorage.save(v));
             System.err.println("finished saving orders to h2 db in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
             System.err.println("number of items in db : " + h2dataStorage.getRepoCount());
             System.err.println("commencing deletion....");
             long start2 = System.currentTimeMillis();
-            orderSet.forEach(order -> {
-                        if (!h2dataStorage.delete(order.getId())) {
-                            ExchangeOrder order1 = (ExchangeOrder) objectConverter.convertFromLocalEntity(order);
-                            log.error("order not deleted: " + order1.toString());
-                        }
-                    });
-                    System.err.println("finished deleting orders from h2 db in " + ((System.currentTimeMillis() - start2) / 1000) + " seconds");
+            orderMap.forEach((k,v) -> {
+                if (!h2dataStorage.delete(k)) {
+                    ExchangeOrder order1 = (ExchangeOrder) objectConverter.convertFromLocalEntity(v);
+                    log.error("order not deleted: " + order1.toString());
+                }
+            });
+            System.err.println("finished deleting orders from h2 db in " + ((System.currentTimeMillis() - start2) / 1000) + " seconds");
             System.err.println("number of items in db : " + h2dataStorage.getRepoCount());
         }
     }
